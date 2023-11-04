@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Audio Processing App</title>
+</head>
+<body>
+    <h1>Audio Sibilance and Plosive Remover</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="audio" accept=".mp3, .wav, .ogg">
+        <button type="submit" name="remove_sibilance">Remove Sibilance</button>
+        <button type="submit" name="remove_plosive">Remove Plosive</button>
+        <button type="submit" name="clean">Clean</button>
+        <br>
+        <label for="cutoff_frequency">Cutoff Frequency:</label>
+        <input type="number" name="cutoff_frequency" id="cutoff_frequency" value="1000">
+        <label for="silence_thresh">Silence Threshold:</label>
+        <input type="number" name="silence_thresh" id="silence_thresh" value="-40">
+    </form>
+    {% if processed_audio %}
+    <audio controls>
+        <source src="{{ url_for('uploaded_file', filename='processed_audio.wav') }}" type="audio/wav">
+    </audio>
+    <br>
+    <a href="{{ url_for('download_processed_audio') }}" download="processed_audio.wav">
+        <button>Download Clean File</button>
+    </a>
+    {% endif %}
+</body>
+</html>
