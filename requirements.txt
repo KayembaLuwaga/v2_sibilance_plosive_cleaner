@@ -2,3 +2,4 @@ flask
 pydub
 scipy
 numpy
+librosa
