@@ -7,9 +7,9 @@ def process_audio(audio_file, remove_sibilance_flag, remove_plosive_flag, cutoff
     audio = AudioSegment.from_file(audio_file)
 
     if remove_sibilance_flag:
-        audio = remove_sibilance(audio_file, silence_thresh)
+        audio = remove_sibilance(audio, silence_thresh)
 
     if remove_plosive_flag:
-        audio = remove_plosive(audio_file, cutoff_frequency)
+        audio = remove_plosive(audio, cutoff_frequency)
 
     return audio
