@@ -2,7 +2,6 @@
 import librosa
 import numpy as np
 from pydub import AudioSegment
-from pydub.playback import play
 
 def remove_sibilance(audio, silence_thresh):
     # Convert AudioSegment to NumPy array
@@ -21,6 +20,11 @@ def remove_sibilance(audio, silence_thresh):
     audio_clean = librosa.istft(stft_clean)
 
     # Convert back to AudioSegment
-    audio_clean = AudioSegment(audio_clean.tobytes(), frame_rate=audio.frame_rate, sample_width=2, channels=1)
+    audio_clean = AudioSegment(
+        audio_clean.tobytes(),
+        frame_rate=audio.frame_rate,
+        sample_width=audio.sample_width,
+        channels=audio.channels,
+    )
 
     return audio_clean
