@@ -2,7 +2,7 @@ from flask import Flask, request, render_template, send_from_directory, Response
 from audio_processing.audio_processing import process_audio
 import os
 
-app = Flask(__name)
+app = Flask(__name__)
 
 # Define the folder where uploaded files will be stored
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
