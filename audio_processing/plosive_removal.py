@@ -3,7 +3,7 @@ from pydub import AudioSegment
 import numpy as np
 from scipy.signal import butter, lfilter
 
-def remove_plosive(audio, cutoff_frequency):
+def remove_plosive(audio, cutoff_frequency, audio_length):
     # Convert AudioSegment to NumPy array
     audio_array = np.array(audio.get_array_of_samples())
 
@@ -13,12 +13,12 @@ def remove_plosive(audio, cutoff_frequency):
     b, a = butter(4, normal_cutoff, btype='low', analog=False)
     filtered_audio = lfilter(b, a, audio_array).astype(np.int16)
 
-    # Convert back to AudioSegment
-    filtered_audio_segment = AudioSegment(
+    # Adjust the processed audio length to match the original
+    processed_audio = AudioSegment(
         filtered_audio.tobytes(),
         frame_rate=audio.frame_rate,
         sample_width=audio.sample_width,
         channels=audio.channels,
-    )
+    )[:audio_length]
 
-    return filtered_audio_segment
+    return processed_audio

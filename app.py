@@ -1,7 +1,7 @@
+from pydub import AudioSegment
 from flask import Flask, request, render_template, send_from_directory, Response
 from audio_processing.audio_processing import process_audio
 import os
-from pydub import AudioSegment
 
 app = Flask(__name__)
 
@@ -30,13 +30,10 @@ def index():
 
         # Process audio only if the uploaded file exists
         if os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded_audio.wav')):
-            processed_audio = process_audio(os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded_audio.wav'), remove_sibilance, remove_plosive, cutoff_frequency, silence_thresh)
+            audio = AudioSegment.from_file(os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded_audio.wav'))
+            audio_length = len(audio)  # Get the length of the original audio
 
-            # Adjust processed audio to match the input audio
-            original_audio = AudioSegment.from_file(os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded_audio.wav'))
-            processed_audio = processed_audio.set_frame_rate(original_audio.frame_rate)
-            processed_audio = processed_audio.set_sample_width(original_audio.sample_width)
-            processed_audio = processed_audio.set_channels(original_audio.channels)
+            processed_audio = process_audio(os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded_audio.wav'), remove_sibilance, remove_plosive, cutoff_frequency, silence_thresh, audio_length)
 
             # Create a response to trigger the download of the processed audio
             def generate():
