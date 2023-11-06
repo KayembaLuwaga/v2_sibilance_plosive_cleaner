@@ -31,6 +31,12 @@ def index():
         if os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded_audio.wav')):
             processed_audio = process_audio(os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded_audio.wav'), remove_sibilance, remove_plosive, cutoff_frequency, silence_thresh)
 
+            # Adjust processed audio to match the input audio
+            original_audio = AudioSegment.from_file(os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded_audio.wav'))
+            processed_audio = processed_audio.set_frame_rate(original_audio.frame_rate)
+            processed_audio = processed_audio.set_sample_width(original_audio.sample_width)
+            processed_audio = processed_audio.set_channels(original_audio.channels)
+
             # Create a response to trigger the download of the processed audio
             def generate():
                 processed_audio.export(os.path.join(app.config['UPLOAD_FOLDER'], 'processed_audio.wav'), format='wav')
