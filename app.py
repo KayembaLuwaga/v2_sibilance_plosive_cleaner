@@ -2,7 +2,7 @@ from flask import Flask, request, render_template, send_from_directory, Response
 from audio_processing.audio_processing import process_audio
 import os
 
-app = Flask(__name__)
+app = Flask(__name)
 
 # Define the folder where uploaded files will be stored
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
@@ -30,13 +30,10 @@ def index():
         # Process audio only if the uploaded file exists
         if os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded_audio.wav')):
             processed_audio = process_audio(os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded_audio.wav'), remove_sibilance, remove_plosive, cutoff_frequency, silence_thresh)
-            processed_audio.export('static/uploads/processed_audio.wav', format='wav')
-
-            # Clear the buffer storage by removing the processed file
-            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], 'processed_audio.wav'))
 
             # Create a response to trigger the download of the processed audio
             def generate():
+                processed_audio.export(os.path.join(app.config['UPLOAD_FOLDER'], 'processed_audio.wav'), format='wav')
                 with open(os.path.join(app.config['UPLOAD_FOLDER'], 'processed_audio.wav'), 'rb') as f:
                     while True:
                         chunk = f.read(1024)
