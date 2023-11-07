@@ -13,7 +13,7 @@ def remove_plosive(audio, cutoff_frequency, audio_length):
     b, a = butter(4, normal_cutoff, btype='low', analog=False)
     filtered_audio = lfilter(b, a, audio_array).astype(np.int16)
 
-    # Adjust the processed audio length to match the original
+    # Ensure processed audio matches the original audio length
     processed_audio = AudioSegment(
         filtered_audio.tobytes(),
         frame_rate=audio.frame_rate,

@@ -10,7 +10,7 @@ def remove_sibilance(audio, silence_thresh, audio_length):
     # Apply spectral analysis using Librosa
     stft = librosa.stft(audio_array.astype(float))
 
-    # Find sibilant frequency components based on threshold
+    # Find sibilant frequency components based on the threshold
     sibilance_mask = np.abs(stft) > silence_thresh
 
     # Remove sibilant components
@@ -19,7 +19,7 @@ def remove_sibilance(audio, silence_thresh, audio_length):
     # Inverse transform to obtain clean audio
     audio_clean = librosa.istft(stft_clean)
 
-    # Adjust the processed audio length to match the original
+    # Ensure processed audio matches the original audio length
     processed_audio = AudioSegment(
         audio_clean.tobytes(),
         frame_rate=audio.frame_rate,

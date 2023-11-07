@@ -1,3 +1,4 @@
+# app.py
 from pydub import AudioSegment
 from flask import Flask, request, render_template, send_from_directory, Response
 from audio_processing.audio_processing import process_audio
@@ -30,15 +31,14 @@ def index():
 
         # Process audio only if the uploaded file exists
         if os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded_audio.wav')):
-            audio = AudioSegment.from_file(os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded_audio.wav'))
-            audio_length = len(audio)  # Get the length of the original audio
-
-            processed_audio = process_audio(os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded_audio.wav'), remove_sibilance, remove_plosive, cutoff_frequency, silence_thresh, audio_length)
+            audio_file_path = os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded_audio.wav')
+            processed_audio_path = os.path.join(app.config['UPLOAD_FOLDER'], 'processed_audio.wav')
+            
+            process_audio(audio_file_path, processed_audio_path, remove_sibilance, remove_plosive, cutoff_frequency, silence_thresh)
 
             # Create a response to trigger the download of the processed audio
             def generate():
-                processed_audio.export(os.path.join(app.config['UPLOAD_FOLDER'], 'processed_audio.wav'), format='wav')
-                with open(os.path.join(app.config['UPLOAD_FOLDER'], 'processed_audio.wav'), 'rb') as f:
+                with open(processed_audio_path, 'rb') as f:
                     while True:
                         chunk = f.read(1024)
                         if not chunk:
